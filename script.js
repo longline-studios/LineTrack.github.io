@@ -230,6 +230,3 @@ function showQuizResults() {
         </div>
     `;
 }
-        <button class="action-btn" onclick="initQuiz()">Restart Quiz</button>
-    `;
-}
