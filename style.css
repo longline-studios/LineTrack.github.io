@@ -4,11 +4,12 @@
     --sidebar-bg: #1e293b;
     --accent: #06b6d4; /* Cyan */
     --accent-hover: #0891b2;
-    --secondary: #64748b;
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
-    --glass: rgba(30, 41, 59, 0.75);
+    --glass: rgba(30, 41, 59, 0.85); /* Slightly darker for better contrast */
     --border: rgba(255, 255, 255, 0.1);
+    --correct: #22c55e;
+    --wrong: #ef4444;
 }
 
 * {
@@ -31,7 +32,6 @@ body {
     height: 100%;
 }
 
-/* ----- Sidebar ----- */
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-bg);
@@ -92,7 +92,6 @@ body {
     text-align: center;
 }
 
-/* ----- Main Content Area ----- */
 .content {
     flex: 1;
     display: flex;
@@ -108,32 +107,23 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     width: 100%;
-    max-width: 650px;
-    padding: 50px;
+    max-width: 700px; /* Wider for quiz buttons */
+    padding: 40px;
     border-radius: 20px;
     border: 1px solid var(--border);
     text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
     animation: fadeIn 0.5s ease-out;
 }
 
 .card-icon {
     font-size: 45px;
     color: var(--accent);
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-#sub-title {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    line-height: 1.6;
-}
+h1 { font-size: 2.2rem; margin-bottom: 10px; }
+#sub-title { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
 
 /* ----- Interactive Elements ----- */
 .btn-group {
@@ -141,6 +131,7 @@ h1 {
     gap: 15px;
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: 20px;
 }
 
 .action-btn {
@@ -171,73 +162,83 @@ h1 {
     color: white;
 }
 
-/* Quiz & Facts Specifics */
-input[type="text"] {
-    width: 80%;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: white;
-    font-size: 1rem;
-    outline: none;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-input[type="text"]:focus {
-    border-color: var(--accent);
-}
-
 .fact-counter {
     display: block;
     font-size: 0.9rem;
     color: var(--text-muted);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-weight: 500;
-    letter-spacing: 1px;
     text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.feedback-msg {
+/* ----- NEW QUIZ STYLES ----- */
+
+.score-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-weight: 700;
     margin-bottom: 20px;
-    font-weight: 600;
-    font-size: 1.1rem;
+    display: inline-block;
 }
 
-.correct { color: #4ade80; }
-.wrong { color: #f87171; }
+/* Grid for Multiple Choice */
+.quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
 
-/* ----- Animations ----- */
+.option-btn {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+}
+
+.option-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+}
+
+/* Correct/Wrong States */
+.option-btn.correct {
+    background: var(--correct) !important;
+    border-color: var(--correct);
+    color: #000; /* Dark text for contrast */
+    font-weight: 600;
+}
+
+.option-btn.wrong {
+    background: var(--wrong) !important;
+    border-color: var(--wrong);
+    opacity: 0.7;
+}
+
+.option-btn:disabled {
+    cursor: default;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ----- Responsive ----- */
+/* Mobile Adjustments */
 @media (max-width: 768px) {
-    .app-container {
-        flex-direction: column;
-        overflow-y: auto;
-    }
-    .sidebar {
-        width: 100%;
-        padding: 15px;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .menu {
-        flex-direction: row;
-        gap: 5px;
-    }
-    .logo span, .footer-note {
-        display: none;
-    }
-    .menu-btn span {
-        display: none; 
-    }
-    .glass-card {
-        padding: 30px 20px;
-    }
+    .app-container { flex-direction: column; overflow-y: auto; }
+    .sidebar { width: 100%; flex-direction: row; justify-content: space-between; padding: 15px; height: auto; }
+    .menu { flex-direction: row; }
+    .menu-btn span, .logo span, .footer-note { display: none; }
+    .quiz-options { grid-template-columns: 1fr; } /* Stack buttons on mobile */
+    .glass-card { padding: 30px 20px; }
 }
