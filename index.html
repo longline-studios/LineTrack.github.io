@@ -3,39 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LineTrack</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>LineTrack | Rail Knowledge</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <!-- ----- SIDEBAR ----- -->
-    <div class="sidebar">
-        <div class="logo">LineTrack</div>
 
-        <div class="menu-group">
-            <div class="menu-title">Sections</div>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-train-subway"></i> LineTrack
+            </div>
 
-            <details>
-                <summary>RailFacts</summary>
-                <div class="submenu-btn" onclick="newFact()">New Fact</div>
-            </details>
+            <div class="menu">
+                <button class="menu-btn active" id="btn-home">
+                    <i class="fa-solid fa-house"></i> Home
+                </button>
+                <button class="menu-btn" id="btn-fact">
+                    <i class="fa-solid fa-lightbulb"></i> Rail Facts
+                </button>
+                <button class="menu-btn" id="btn-quiz">
+                    <i class="fa-solid fa-circle-question"></i> Rail Quiz
+                </button>
+            </div>
 
-            <details>
-                <summary>RailQuiz</summary>
-                <div class="submenu-btn" onclick="startQuiz()">Start Quiz</div>
-                <div class="submenu-btn" onclick="nextQuestion()">Next Question</div>
-            </details>
-        </div>
-    </div>
+            <div class="footer-note">
+                &copy; 2025 LineTrack
+            </div>
+        </nav>
 
-    <!-- ----- MAIN CONTENT ----- -->
-    <div class="content">
-        <h1 id="title">Welcome to LineTrack</h1>
-        <p id="subtitle">Select a feature from the left menu.</p>
-
-        <div id="output"></div>
+        <!-- MAIN CONTENT -->
+        <main class="content">
+            <div id="card" class="glass-card">
+                <!-- Content injected via JS -->
+                <div class="card-icon"><i class="fa-solid fa-train"></i></div>
+                <h1 id="main-title">Welcome Aboard</h1>
+                <p id="sub-title">Explore the world of trains with facts and quizzes.</p>
+                
+                <div id="dynamic-area">
+                    <button class="action-btn" onclick="initFacts()">Get Started</button>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script src="script.js"></script>
