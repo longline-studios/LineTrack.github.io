@@ -1,4 +1,6 @@
-/* ----- Variables & Reset ----- */
+/* =============================
+   1. VARIABLES & RESET
+   ============================= */
 :root {
     --bg-dark: #0f172a;
     --sidebar-bg: #1e293b;
@@ -6,10 +8,10 @@
     --accent-hover: #0891b2;
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
-    --glass: rgba(30, 41, 59, 0.85); /* Slightly darker for better contrast */
+    --glass: rgba(30, 41, 59, 0.85);
     --border: rgba(255, 255, 255, 0.1);
-    --correct: #22c55e;
-    --wrong: #ef4444;
+    --correct: #22c55e; /* Green */
+    --wrong: #ef4444;   /* Red */
 }
 
 * {
@@ -23,15 +25,18 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     height: 100vh;
-    overflow: hidden;
+    overflow: hidden; /* Prevents scrolling on desktop */
 }
 
-/* ----- Layout ----- */
+/* =============================
+   2. MAIN LAYOUT
+   ============================= */
 .app-container {
     display: flex;
     height: 100%;
 }
 
+/* ----- Sidebar ----- */
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-bg);
@@ -92,6 +97,7 @@ body {
     text-align: center;
 }
 
+/* ----- Content Area ----- */
 .content {
     flex: 1;
     display: flex;
@@ -99,9 +105,12 @@ body {
     align-items: center;
     background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 60%);
     padding: 20px;
+    position: relative; /* For positioning context if needed */
 }
 
-/* ----- Glass Card ----- */
+/* =============================
+   3. GLASS CARD COMPONENT
+   ============================= */
 .glass-card {
     background: var(--glass);
     backdrop-filter: blur(12px);
@@ -122,10 +131,21 @@ body {
     margin-bottom: 15px;
 }
 
-h1 { font-size: 2.2rem; margin-bottom: 10px; }
-#sub-title { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
 
-/* ----- Interactive Elements ----- */
+#sub-title {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* =============================
+   4. INTERACTIVE ELEMENTS
+   ============================= */
 .btn-group {
     display: flex;
     gap: 15px;
@@ -162,6 +182,7 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
     color: white;
 }
 
+/* Fact Counter Text */
 .fact-counter {
     display: block;
     font-size: 0.9rem;
@@ -172,8 +193,11 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
     letter-spacing: 1px;
 }
 
-/* ----- NEW QUIZ STYLES ----- */
+/* =============================
+   5. QUIZ STYLES (MULTIPLE CHOICE)
+   ============================= */
 
+/* Score Badge */
 .score-badge {
     background: rgba(255, 255, 255, 0.1);
     padding: 8px 15px;
@@ -185,14 +209,15 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
     display: inline-block;
 }
 
-/* Grid for Multiple Choice */
+/* Grid Layout for Questions */
 .quiz-options {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; /* Two columns */
     gap: 15px;
     margin-bottom: 25px;
 }
 
+/* Option Buttons */
 .option-btn {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border);
@@ -210,11 +235,15 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
     border-color: var(--accent);
 }
 
-/* Correct/Wrong States */
+.option-btn:disabled {
+    cursor: default;
+}
+
+/* Feedback States */
 .option-btn.correct {
     background: var(--correct) !important;
     border-color: var(--correct);
-    color: #000; /* Dark text for contrast */
+    color: #000; /* Dark text for contrast against green */
     font-weight: 600;
 }
 
@@ -224,70 +253,93 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
     opacity: 0.7;
 }
 
-.option-btn:disabled {
-    cursor: default;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-    .app-container { flex-direction: column; overflow-y: auto; }
-    .sidebar { width: 100%; flex-direction: row; justify-content: space-between; padding: 15px; height: auto; }
-    .menu { flex-direction: row; }
-    .menu-btn span, .logo span, .footer-note { display: none; }
-    .quiz-options { grid-template-columns: 1fr; } /* Stack buttons on mobile */
-    .glass-card { padding: 30px 20px; }
-}
-
-/* ... existing code ... */
-
-/* ----- CREDITS (Bottom Right) ----- */
+/* =============================
+   6. CREDITS / LOGO (BOTTOM RIGHT)
+   ============================= */
 .credits {
     position: fixed;
     bottom: 20px;
     right: 25px;
     display: flex;
     align-items: center;
-    gap: 12px;       /* Space between text and logo */
-    z-index: 1000;   /* Ensures it sits on top of everything */
-    opacity: 0.8;    /* Slightly transparent */
+    gap: 12px;
+    z-index: 1000;
+    opacity: 0.8;
     transition: opacity 0.3s;
-    pointer-events: none; /* Allows clicking through if it overlaps something important */
+    pointer-events: none; /* Prevents blocking clicks if overlaying */
 }
 
 .credits:hover {
-    opacity: 1; /* Fully visible on hover */
+    opacity: 1;
 }
 
 .credits span {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.6); /* Muted white text */
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 500;
-    text-transform: uppercase; /* Makes "Made by" look professional */
+    text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .credits img {
-    height: 28px;    /* Adjust size of the logo here */
-    width: auto;     /* Maintains aspect ratio */
+    height: 28px; /* Adjust based on your preference */
+    width: auto;
     display: block;
 }
 
-/* Mobile Adjustment */
+/* =============================
+   7. ANIMATIONS & RESPONSIVE
+   ============================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        overflow-y: auto; /* Allow scroll on mobile */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .menu {
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    /* Hide text labels on mobile menu, keep icons */
+    .menu-btn span, 
+    .logo span, 
+    .footer-note {
+        display: none;
+    }
+
+    .glass-card {
+        padding: 30px 20px;
+    }
+
+    .quiz-options {
+        grid-template-columns: 1fr; /* Stack buttons vertically on mobile */
+    }
+
+    /* Adjust logo position on mobile */
     .credits {
         bottom: 15px;
         right: 15px;
     }
-    
+
     .credits span {
         font-size: 10px;
     }
-    
+
     .credits img {
         height: 20px;
     }
