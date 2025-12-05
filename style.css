@@ -345,4 +345,70 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
     /* Boutons Larges */
     .action-btn { width: 100%; margin-bottom: 10px; }
     .btn-group { flex-direction: column; gap: 10px; width: 100%; }
+   /* =============================
+   10. SIGNAL SIM GAME
+   ============================= */
+
+/* Le plateau de jeu */
+.game-board {
+    background-color: #000000; /* Fond noir comme la photo */
+    border: 2px solid #333;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    position: relative;
+    margin: 0 auto 20px auto;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* Les rails (SVG) */
+.track-line {
+    stroke: #555; /* Gris foncé */
+    stroke-width: 6;
+    stroke-linecap: round;
+}
+
+/* L'aiguillage (Switch) */
+.switch-line {
+    stroke: #06b6d4; /* Bleu Cyan */
+    stroke-width: 6;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.switch-line:hover {
+    stroke: #fff;
+}
+
+/* Les Signaux */
+.signal-light {
+    cursor: pointer;
+    transition: fill 0.2s;
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+/* Le Train */
+.train-obj {
+    fill: #ffffff;
+    width: 40px;
+    height: 12px;
+    transition: transform 0.1s linear;
+}
+
+/* Panneau de contrôle du jeu */
+.game-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.status-text {
+    font-family: 'Courier New', monospace;
+    color: #06b6d4;
+    margin-bottom: 15px;
+    font-weight: bold;
+
 }
