@@ -60,17 +60,34 @@ const cardIcon = document.querySelector(".card-icon i");
 renderHome();
 
 /* =============================
-   3. NAVIGATION
+   3. NAVIGATION (Code Sécurisé)
    ============================= */
-document.getElementById('btn-home').addEventListener('click', () => { setActiveMenu('btn-home'); renderHome(); });
-document.getElementById('btn-fact').addEventListener('click', () => { setActiveMenu('btn-fact'); initFacts(); });
-document.getElementById('btn-quiz').addEventListener('click', () => { setActiveMenu('btn-quiz'); initQuiz(); });
-document.getElementById('btn-news').addEventListener('click', () => { setActiveMenu('btn-news'); initNews(); });
-document.getElementById('btn-game').addEventListener('click', () => { setActiveMenu('btn-game'); initGame(); });
 
-function setActiveMenu(id) {
-    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+// Fonction utilitaire pour attacher un événement sans faire planter le site
+function attachMenuEvent(id, action) {
+    const btn = document.getElementById(id);
+    if (btn) {
+        btn.addEventListener('click', () => {
+            // Enlever la classe active de tous les boutons
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            // L'ajouter au bouton cliqué
+            btn.classList.add('active');
+            // Lancer l'action
+            action();
+        });
+    } else {
+        console.warn(`Attention: Le bouton avec l'ID '${id}' est introuvable dans le HTML.`);
+    }
+}
+
+// Attachement des événements
+attachMenuEvent('btn-home', () => renderHome());
+attachMenuEvent('btn-fact', () => initFacts());
+attachMenuEvent('btn-quiz', () => initQuiz());
+attachMenuEvent('btn-news', () => initNews());
+attachMenuEvent('btn-game', () => initGame());
+
+// Note : setActiveMenu n'est plus nécessaire car géré par attachMenuEvent
 }
 
 /* =============================
