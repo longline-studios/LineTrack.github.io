@@ -1,6 +1,8 @@
 /* =============================
-   DATA: FACTS (15 items)
+   1. DATA DATASETS
    ============================= */
+
+/* --- FACTS --- */
 const facts = [
     "The first public railway opened in 1825 between Stockton and Darlington in the UK.",
     "The TGV set a world speed record of 574.8 km/h (357 mph) in 2007.",
@@ -19,14 +21,12 @@ const facts = [
     "The Seikan Tunnel in Japan has a 23.3 km section that is under the seabed."
 ];
 
-/* =============================
-   DATA: QUIZ (Multiple Choice)
-   ============================= */
+/* --- QUIZ (Multiple Choice) --- */
 const quizData = [
     {
         q: "Which country opened the first public railway in 1825?",
         options: ["United Kingdom", "United States", "Germany", "France"],
-        correct: 0 // Index of the correct answer in 'options'
+        correct: 0 
     },
     {
         q: "What is the name of the famous high-speed train in Japan?",
@@ -75,8 +75,36 @@ const quizData = [
     }
 ];
 
+/* --- NEWS POSTS --- */
+const newsData = [
+    {
+        category: "Innovation",
+        date: "Dec 05, 2025",
+        title: "Hydrogen Trains Expand in Europe",
+        content: "Germany and Italy are leading the way with new Coradia iLint trains that emit only water vapor. This marks a huge step towards green rail travel."
+    },
+    {
+        category: "High Speed",
+        date: "Nov 28, 2025",
+        title: "New Speed Record Attempt Planned",
+        content: "Engineers are preparing a modified Maglev prototype hoping to break the 603 km/h barrier next month in Japan."
+    },
+    {
+        category: "History",
+        date: "Nov 15, 2025",
+        title: "100 Years of the Flying Scotsman",
+        content: "Celebrations are taking place across the UK to honor the world's most famous steam locomotive."
+    },
+    {
+        category: "Infrastructure",
+        date: "Oct 30, 2025",
+        title: "Night Trains Make a Comeback",
+        content: "New sleeper services connecting Paris, Berlin, and Vienna have sold out in record time as travelers ditch planes for trains."
+    }
+];
+
 /* =============================
-   STATE MANAGEMENT
+   2. STATE MANAGEMENT
    ============================= */
 
 let factIndex = 0;
@@ -94,7 +122,7 @@ const cardIcon = document.querySelector(".card-icon i");
 renderHome();
 
 /* =============================
-   NAVIGATION HANDLERS
+   3. NAVIGATION HANDLERS
    ============================= */
 
 document.getElementById('btn-home').addEventListener('click', () => {
@@ -112,19 +140,29 @@ document.getElementById('btn-quiz').addEventListener('click', () => {
     initQuiz();
 });
 
+// If you haven't added this button to HTML yet, make sure to add it, or this line will error
+const newsBtn = document.getElementById('btn-news');
+if (newsBtn) {
+    newsBtn.addEventListener('click', () => {
+        setActiveMenu('btn-news');
+        initNews();
+    });
+}
+
 function setActiveMenu(id) {
     document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    const btn = document.getElementById(id);
+    if(btn) btn.classList.add('active');
 }
 
 /* =============================
-   HOME LOGIC
+   4. HOME PAGE LOGIC
    ============================= */
 
 function renderHome() {
     cardIcon.className = "fa-solid fa-train";
     titleEl.innerText = "Welcome Aboard";
-    subEl.innerText = "Discover amazing engineering feats or test your knowledge.";
+    subEl.innerText = "Discover amazing engineering feats, read the latest news, or test your knowledge.";
     
     dynamicArea.innerHTML = `
         <div class="btn-group">
@@ -139,7 +177,7 @@ function renderHome() {
 }
 
 /* =============================
-   FACTS LOGIC
+   5. FACTS LOGIC
    ============================= */
 
 function initFacts() {
@@ -184,7 +222,7 @@ function prevFact() {
 }
 
 /* =============================
-   MULTIPLE CHOICE QUIZ LOGIC
+   6. QUIZ LOGIC (Multiple Choice)
    ============================= */
 
 function initQuiz() {
@@ -279,4 +317,41 @@ function showQuizResults() {
             <button class="action-btn secondary" onclick="initFacts()">Study Facts</button>
         </div>
     `;
+}
+
+/* =============================
+   7. NEWS PAGE LOGIC
+   ============================= */
+
+function initNews() {
+    setActiveMenu('btn-news');
+    cardIcon.className = "fa-solid fa-newspaper";
+    titleEl.innerText = "Rail News";
+    subEl.innerText = "Latest updates from the world of railways.";
+
+    let htmlContent = '<div class="news-container">';
+
+    newsData.forEach(post => {
+        htmlContent += `
+            <div class="news-card">
+                <div class="news-header">
+                    <span class="news-tag">${post.category}</span>
+                    <span class="news-date">${post.date}</span>
+                </div>
+                <div class="news-title">${post.title}</div>
+                <div class="news-excerpt">${post.content}</div>
+            </div>
+        `;
+    });
+
+    htmlContent += '</div>';
+    
+    // Add a button to go back home at the bottom
+    htmlContent += `
+        <div style="margin-top: 20px;">
+            <button class="action-btn secondary" onclick="renderHome()">Back Home</button>
+        </div>
+    `;
+
+    dynamicArea.innerHTML = htmlContent;
 }
