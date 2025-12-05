@@ -355,3 +355,174 @@ function initNews() {
 
     dynamicArea.innerHTML = htmlContent;
 }
+/* =============================
+   8. SIGNAL SIM GAME LOGIC
+   ============================= */
+
+// État du jeu
+let gameState = {
+    signal: 'red',      // 'red' ou 'green'
+    switch: 'top',      // 'top' (voie 1) ou 'bottom' (voie 2)
+    trainMoving: false,
+    trainX: 50          // Position de départ
+};
+
+// Initialisation via le menu
+const gameBtn = document.getElementById('btn-game');
+if (gameBtn) {
+    gameBtn.addEventListener('click', () => {
+        setActiveMenu('btn-game');
+        initGame();
+    });
+}
+
+function initGame() {
+    setActiveMenu('btn-game');
+    cardIcon.className = "fa-solid fa-traffic-light";
+    titleEl.innerText = "Signal Simulator";
+    subEl.innerText = "Mission: Guide the train to Track 2 safely.";
+
+    // On injecte le SVG (Dessin des rails)
+    // C'est un dessin vectoriel simple : Lignes grises + Aiguillage bleu + Feu
+    dynamicArea.innerHTML = `
+        <div class="status-text" id="game-status">SYSTEM READY. WAITING FOR COMMAND.</div>
+        
+        <div class="game-board" id="board">
+            <svg width="100%" height="100%" viewBox="0 0 600 300">
+                <!-- RAIL PRINCIPAL (Gauche) -->
+                <line x1="0" y1="150" x2="200" y2="150" class="track-line" />
+                
+                <!-- VOIE 1 (Haut) -->
+                <line x1="200" y1="150" x2="600" y2="100" class="track-line" opacity="0.5" />
+                <text x="550" y="90" fill="#555" font-family="monospace" font-size="12">TRACK 1</text>
+
+                <!-- VOIE 2 (Bas - Destination) -->
+                <line x1="200" y1="150" x2="600" y2="200" class="track-line" opacity="0.5" />
+                <text x="550" y="230" fill="#555" font-family="monospace" font-size="12">TRACK 2</text>
+
+                <!-- AIGUILLAGE (Switch) - ID: game-switch -->
+                <line id="game-switch" x1="200" y1="150" x2="300" y2="135" class="switch-line" onclick="toggleSwitch()" />
+
+                <!-- SIGNAL (Feu) - ID: game-signal -->
+                <line x1="180" y1="120" x2="180" y2="150" stroke="#333" stroke-width="2" />
+                <circle id="game-signal" cx="180" cy="120" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal()" />
+
+                <!-- LE TRAIN -->
+                <rect id="game-train" x="20" y="144" width="40" height="12" rx="2" fill="white" />
+            </svg>
+        </div>
+
+        <div class="game-controls">
+            <button class="action-btn" onclick="startTrain()">START TRAIN</button>
+            <button class="action-btn secondary" onclick="resetGame()">RESET</button>
+        </div>
+        
+        <div style="font-size: 0.9rem; color: #94a3b8; margin-top: 15px;">
+            <i class="fa-solid fa-computer-mouse"></i> Click the <b>Blue Line</b> (Switch) and the <b>Red Light</b> (Signal).
+        </div>
+    `;
+
+    // Réinitialiser les variables
+    gameState = { signal: 'red', switch: 'top', trainMoving: false, trainX: 20 };
+}
+
+/* --- LOGIQUE DU JEU --- */
+
+function toggleSignal() {
+    if (gameState.trainMoving) return; // Interdit de toucher pendant que ça roule
+
+    const signalEl = document.getElementById('game-signal');
+    if (gameState.signal === 'red') {
+        gameState.signal = 'green';
+        signalEl.setAttribute('fill', '#22c55e'); // Vert
+    } else {
+        gameState.signal = 'red';
+        signalEl.setAttribute('fill', '#ef4444'); // Rouge
+    }
+}
+
+function toggleSwitch() {
+    if (gameState.trainMoving) return;
+
+    const switchEl = document.getElementById('game-switch');
+    if (gameState.switch === 'top') {
+        gameState.switch = 'bottom';
+        // Animation visuelle de l'aiguillage vers le bas
+        switchEl.setAttribute('x2', '300');
+        switchEl.setAttribute('y2', '165'); // Descend
+    } else {
+        gameState.switch = 'top';
+        // Animation visuelle vers le haut
+        switchEl.setAttribute('x2', '300');
+        switchEl.setAttribute('y2', '135'); // Monte
+    }
+}
+
+function startTrain() {
+    if (gameState.trainMoving) return;
+    
+    gameState.trainMoving = true;
+    const statusEl = document.getElementById('game-status');
+    const trainEl = document.getElementById('game-train');
+    
+    statusEl.innerText = "TRAIN DEPARTING...";
+    statusEl.style.color = "#fbbf24"; // Jaune
+
+    let position = 20;
+    let speed = 2; // Vitesse du train
+
+    const interval = setInterval(() => {
+        position += speed;
+        
+        // 1. Calcul de la position Y (Haut/Bas) selon l'avancement
+        let currentY = 144; // Y de départ
+        
+        // Si on dépasse l'aiguillage (x > 200)
+        if (position > 200) {
+            if (gameState.switch === 'top') {
+                // Monte progressivement
+                currentY = 144 - (position - 200) * 0.12; 
+            } else {
+                // Descend progressivement
+                currentY = 144 + (position - 200) * 0.12;
+            }
+        }
+        
+        // Mise à jour visuelle
+        trainEl.setAttribute('x', position);
+        trainEl.setAttribute('y', currentY);
+
+        // --- CONDITIONS DE DÉFAITE / VICTOIRE ---
+
+        // Cas 1 : Le feu est rouge et le train arrive au feu (x=140 environ)
+        if (gameState.signal === 'red' && position > 140 && position < 150) {
+            clearInterval(interval);
+            statusEl.innerText = "ALARM: SPAD (Signal Passed at Danger)! GAME OVER.";
+            statusEl.style.color = "#ef4444";
+            trainEl.setAttribute('fill', '#ef4444'); // Train devient rouge
+            gameState.trainMoving = false;
+        }
+
+        // Cas 2 : Le train est allé sur la Voie 1 (Mauvaise voie)
+        if (position > 580 && gameState.switch === 'top') {
+            clearInterval(interval);
+            statusEl.innerText = "WRONG DESTINATION: Train arrived at Track 1.";
+            statusEl.style.color = "#fbbf24"; // Orange
+            gameState.trainMoving = false;
+        }
+
+        // Cas 3 : VICTOIRE (Voie 2 atteinte)
+        if (position > 580 && gameState.switch === 'bottom') {
+            clearInterval(interval);
+            statusEl.innerText = "SUCCESS: Train arrived safely at Track 2.";
+            statusEl.style.color = "#22c55e"; // Vert
+            trainEl.setAttribute('fill', '#22c55e');
+            gameState.trainMoving = false;
+        }
+
+    }, 16); // 60 FPS environ
+}
+
+function resetGame() {
+    initGame(); // Recharge tout
+}
