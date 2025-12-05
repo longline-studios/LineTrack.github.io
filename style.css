@@ -14,11 +14,7 @@
     --wrong: #ef4444;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -31,122 +27,70 @@ body {
 /* =============================
    2. LAYOUT PRINCIPAL
    ============================= */
-.app-container {
-    display: flex;
-    height: 100%;
-}
+.app-container { display: flex; height: 100%; }
 
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     padding: 30px 20px;
     border-right: 1px solid var(--border);
     flex-shrink: 0;
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 50px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-size: 24px; font-weight: 700; color: var(--accent);
+    margin-bottom: 50px; display: flex; align-items: center; gap: 10px;
 }
 
-.menu {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    flex: 1;
-}
+.menu { display: flex; flex-direction: column; gap: 15px; flex: 1; }
 
 .menu-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 16px;
-    font-family: inherit;
-    text-align: left;
-    padding: 12px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    background: transparent; border: none; color: var(--text-muted);
+    font-size: 16px; font-family: inherit; text-align: left;
+    padding: 12px 15px; border-radius: 8px; cursor: pointer;
+    transition: 0.3s; display: flex; align-items: center; gap: 12px;
 }
-
 .menu-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
 .menu-btn.active { background: var(--accent); color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
 
 .footer-note { font-size: 12px; color: var(--text-muted); text-align: center; }
 
 .content {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    flex: 1; display: flex; justify-content: center; align-items: center;
     background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 60%);
-    padding: 20px;
-    position: relative;
-    overflow-y: auto;
+    padding: 20px; position: relative; overflow-y: auto;
 }
 
 /* =============================
-   3. GLASS CARD & TEXT
+   3. GLASS CARD
    ============================= */
 .glass-card {
-    background: var(--glass);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    width: 100%;
-    max-width: 700px;
-    padding: 40px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    width: 100%; max-width: 700px; padding: 40px;
+    border-radius: 20px; border: 1px solid var(--border);
+    text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
     animation: fadeIn 0.5s ease-out;
 }
-
 .card-icon { font-size: 45px; color: var(--accent); margin-bottom: 15px; }
 h1 { font-size: 2.2rem; margin-bottom: 10px; }
 #sub-title { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
 
 /* =============================
-   4. ELEMENTS INTERACTIFS
+   4. ELEMENTS UI
    ============================= */
-.btn-group {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
+.btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
 .action-btn {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
+    background: var(--accent); color: white; border: none; padding: 12px 30px;
+    font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.3s;
 }
-
 .action-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
 .action-btn.secondary { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
 .action-btn.secondary:hover { background: var(--accent); color: white; }
-
 .fact-counter { display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
 
 /* =============================
-   5. QUIZ STYLES
+   5. QUIZ
    ============================= */
 .score-badge { background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; color: var(--accent); font-weight: 700; margin-bottom: 20px; display: inline-block; }
 .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
@@ -156,7 +100,7 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
 .option-btn.wrong { background: var(--wrong) !important; border-color: var(--wrong); opacity: 0.7; }
 
 /* =============================
-   6. NEWS SECTION
+   6. NEWS
    ============================= */
 .news-container { text-align: left; max-height: 400px; overflow-y: auto; padding-right: 10px; }
 .news-container::-webkit-scrollbar { width: 6px; }
@@ -171,21 +115,14 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
 .news-excerpt { font-size: 0.95rem; color: #cbd5e1; line-height: 1.5; }
 
 /* =============================
-   7. SIGNAL SIM GAME (Jeu)
+   7. GAME (SIGNAL SIM)
    ============================= */
 .game-board {
-    background-color: #000000;
-    border: 2px solid #333;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 600px;
-    height: 300px;
-    position: relative;
-    margin: 0 auto 20px auto;
-    overflow: hidden;
+    background-color: #000000; border: 2px solid #333; border-radius: 10px;
+    width: 100%; max-width: 600px; height: 300px;
+    position: relative; margin: 0 auto 20px auto; overflow: hidden;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
 }
-
 .track-line { stroke: #555; stroke-width: 6; stroke-linecap: round; }
 .switch-line { stroke: #06b6d4; stroke-width: 6; cursor: pointer; transition: all 0.3s ease; }
 .switch-line:hover { stroke: #fff; }
@@ -194,7 +131,7 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
 .status-text { font-family: 'Courier New', monospace; color: #06b6d4; margin-bottom: 15px; font-weight: bold; }
 
 /* =============================
-   8. CREDITS (Logo)
+   8. CREDITS / LOGO
    ============================= */
 .credits {
     position: fixed; bottom: 25px; right: 30px;
@@ -208,7 +145,7 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 /* =============================
-   9. RESPONSIVE MOBILE
+   9. MOBILE RESPONSIVE
    ============================= */
 @media (max-width: 768px) {
     .app-container { flex-direction: column; height: 100vh; overflow: hidden; }
