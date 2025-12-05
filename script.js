@@ -1,8 +1,7 @@
-/* =========================================================
-   1. DATA DATASETS (DATA)
-   ========================================================= */
+/* =============================
+   1. DATA (FACTS, QUIZ, NEWS)
+   ============================= */
 
-/* --- FACTS --- */
 const facts = [
     "The first public railway opened in 1825 between Stockton and Darlington in the UK.",
     "The TGV set a world speed record of 574.8 km/h (357 mph) in 2007.",
@@ -21,7 +20,6 @@ const facts = [
     "The Seikan Tunnel in Japan has a 23.3 km section that is under the seabed."
 ];
 
-/* --- QUIZ --- */
 const quizData = [
     { q: "Which country opened the first public railway in 1825?", options: ["United Kingdom", "United States", "Germany", "France"], correct: 0 },
     { q: "What is the name of the famous high-speed train in Japan?", options: ["TGV", "Shinkansen", "Maglev", "ICE"], correct: 1 },
@@ -35,7 +33,6 @@ const quizData = [
     { q: "What is the highest railway line in the world?", options: ["Swiss Alps", "Qinghai-Tibet", "Rocky Mountaineer", "Andean Explorer"], correct: 1 }
 ];
 
-/* --- NEWS --- */
 const newsData = [
     { category: "Innovation", date: "Dec 05, 2025", title: "Hydrogen Trains Expand in Europe", content: "Germany and Italy are leading the way with new Coradia iLint trains that emit only water vapor." },
     { category: "High Speed", date: "Nov 28, 2025", title: "New Speed Record Attempt Planned", content: "Engineers are preparing a modified Maglev prototype hoping to break the 603 km/h barrier next month in Japan." },
@@ -43,17 +40,16 @@ const newsData = [
     { category: "Infrastructure", date: "Oct 30, 2025", title: "Night Trains Make a Comeback", content: "New sleeper services connecting Paris, Berlin, and Vienna have sold out in record time as travelers ditch planes for trains." }
 ];
 
-/* =========================================================
-   2. STATE MANAGEMENT & DOM
-   ========================================================= */
+/* =============================
+   2. STATE MANAGEMENT
+   ============================= */
 let factIndex = 0;
 let quizIndex = 0;
 let quizScore = 0;
 const POINTS_PER_Q = 100;
 
-// Game State Variables
+// Game State
 let gameState = { signal: 'red', switch: 'top', trainMoving: false, trainX: 20 };
-let gameInterval = null; // Pour pouvoir arrêter proprement le jeu
 
 // DOM Elements
 const titleEl = document.getElementById("main-title");
@@ -61,48 +57,31 @@ const subEl = document.getElementById("sub-title");
 const dynamicArea = document.getElementById("dynamic-area");
 const cardIcon = document.querySelector(".card-icon i");
 
-// Démarrage
 renderHome();
 
-/* =========================================================
-   3. NAVIGATION HANDLERS (SÉCURISÉS)
-   ========================================================= */
+/* =============================
+   3. NAVIGATION
+   ============================= */
+document.getElementById('btn-home').addEventListener('click', () => { setActiveMenu('btn-home'); renderHome(); });
+document.getElementById('btn-fact').addEventListener('click', () => { setActiveMenu('btn-fact'); initFacts(); });
+document.getElementById('btn-quiz').addEventListener('click', () => { setActiveMenu('btn-quiz'); initQuiz(); });
+document.getElementById('btn-news').addEventListener('click', () => { setActiveMenu('btn-news'); initNews(); });
+document.getElementById('btn-game').addEventListener('click', () => { setActiveMenu('btn-game'); initGame(); });
 
-// Cette fonction évite que le site plante si un bouton manque
-function attachMenuEvent(id, action) {
-    const btn = document.getElementById(id);
-    if (btn) {
-        btn.addEventListener('click', () => {
-            // Mise à jour visuelle du menu
-            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            // Arrêter le jeu si on change de page
-            if (gameInterval) clearInterval(gameInterval);
-            
-            // Lancer la page demandée
-            action();
-        });
-    } else {
-        console.log(`Note: Bouton ${id} non trouvé (pas grave).`);
-    }
+function setActiveMenu(id) {
+    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 }
 
-// Attachement des boutons
-attachMenuEvent('btn-home', renderHome);
-attachMenuEvent('btn-fact', initFacts);
-attachMenuEvent('btn-quiz', initQuiz);
-attachMenuEvent('btn-news', initNews);
-attachMenuEvent('btn-game', initGame);
+/* =============================
+   4. SECTIONS LOGIC
+   ============================= */
 
-/* =========================================================
-   4. HOME LOGIC
-   ========================================================= */
+/* --- HOME --- */
 function renderHome() {
     cardIcon.className = "fa-solid fa-train";
     titleEl.innerText = "Welcome Aboard";
     subEl.innerText = "Discover amazing engineering feats, read the latest news, or test your knowledge.";
-    
     dynamicArea.innerHTML = `
         <div class="btn-group">
             <button class="action-btn" onclick="initFacts()"><i class="fa-solid fa-book-open"></i> Discover Facts</button>
@@ -111,14 +90,11 @@ function renderHome() {
     `;
 }
 
-/* =========================================================
-   5. FACTS LOGIC
-   ========================================================= */
+/* --- FACTS --- */
 function initFacts() {
     cardIcon.className = "fa-solid fa-lightbulb";
     titleEl.innerText = "Did You Know?";
     subEl.innerText = "Learn something new about railways.";
-    
     factIndex = 0;
     showFact();
 }
@@ -127,25 +103,19 @@ function showFact() {
     if (factIndex >= facts.length) factIndex = 0;
     const currentFact = facts[factIndex];
     const counterText = `Fact ${factIndex + 1} / ${facts.length}`;
-
     dynamicArea.innerHTML = `
         <span class="fact-counter">${counterText}</span>
-        <div style="font-size: 1.3rem; margin-bottom: 30px; min-height: 80px; display:flex; align-items:center; justify-content:center;">
-            "${currentFact}"
-        </div>
+        <div style="font-size: 1.3rem; margin-bottom: 30px; min-height: 80px; display:flex; align-items:center; justify-content:center;">"${currentFact}"</div>
         <div class="btn-group">
             <button class="action-btn secondary" onclick="prevFact()" ${factIndex === 0 ? 'disabled' : ''}>Previous</button>
             <button class="action-btn" onclick="nextFact()">Next Fact</button>
         </div>
     `;
 }
-
 function nextFact() { factIndex++; if (factIndex >= facts.length) factIndex = 0; showFact(); }
 function prevFact() { if (factIndex > 0) { factIndex--; showFact(); } }
 
-/* =========================================================
-   6. QUIZ LOGIC
-   ========================================================= */
+/* --- QUIZ --- */
 function initQuiz() {
     quizIndex = 0; quizScore = 0;
     cardIcon.className = "fa-solid fa-circle-question";
@@ -154,7 +124,6 @@ function initQuiz() {
 
 function renderQuestion() {
     if (quizIndex >= quizData.length) { showQuizResults(); return; }
-
     const currentQ = quizData[quizIndex];
     titleEl.innerText = `Question ${quizIndex + 1}`;
     subEl.innerText = currentQ.q;
@@ -171,7 +140,6 @@ function renderQuestion() {
 function checkAnswer(selectedIndex, btnElement) {
     const currentQ = quizData[quizIndex];
     const allButtons = document.querySelectorAll('.option-btn');
-    
     allButtons.forEach(btn => btn.disabled = true);
 
     if (selectedIndex === currentQ.correct) {
@@ -181,49 +149,37 @@ function checkAnswer(selectedIndex, btnElement) {
         btnElement.classList.add('wrong');
         allButtons[currentQ.correct].classList.add('correct');
     }
-
     document.querySelector('.score-badge').innerText = `Points: ${quizScore}`;
     document.getElementById('next-btn-container').innerHTML = `<button class="action-btn" onclick="nextQuestion()">Next Question</button>`;
 }
-
 function nextQuestion() { quizIndex++; renderQuestion(); }
-
 function showQuizResults() {
     titleEl.innerText = "Quiz Complete!";
     subEl.innerText = `Final Score: ${quizScore} Points`;
     dynamicArea.innerHTML = `
         <div style="font-size: 3rem; color: #06b6d4; margin-bottom: 10px;"><i class="fa-solid fa-trophy"></i></div>
-        <div class="btn-group">
-            <button class="action-btn" onclick="initQuiz()">Play Again</button>
-            <button class="action-btn secondary" onclick="initFacts()">Study Facts</button>
-        </div>
+        <div class="btn-group"><button class="action-btn" onclick="initQuiz()">Play Again</button><button class="action-btn secondary" onclick="initFacts()">Study Facts</button></div>
     `;
 }
 
-/* =========================================================
-   7. NEWS LOGIC
-   ========================================================= */
+/* --- NEWS --- */
 function initNews() {
     cardIcon.className = "fa-solid fa-newspaper";
     titleEl.innerText = "Rail News";
     subEl.innerText = "Latest updates from the world of railways.";
-
     let htmlContent = '<div class="news-container">';
     newsData.forEach(post => {
         htmlContent += `
             <div class="news-card">
                 <div class="news-header"><span class="news-tag">${post.category}</span><span class="news-date">${post.date}</span></div>
-                <div class="news-title">${post.title}</div>
-                <div class="news-excerpt">${post.content}</div>
+                <div class="news-title">${post.title}</div><div class="news-excerpt">${post.content}</div>
             </div>`;
     });
     htmlContent += '</div><div style="margin-top: 20px;"><button class="action-btn secondary" onclick="renderHome()">Back Home</button></div>';
     dynamicArea.innerHTML = htmlContent;
 }
 
-/* =========================================================
-   8. GAME LOGIC (SIGNAL SIM)
-   ========================================================= */
+/* --- GAME (SIGNAL SIM) --- */
 function initGame() {
     cardIcon.className = "fa-solid fa-traffic-light";
     titleEl.innerText = "Signal Simulator";
@@ -234,40 +190,24 @@ function initGame() {
         <div class="game-board" id="board">
             <svg width="100%" height="100%" viewBox="0 0 600 300">
                 <line x1="0" y1="150" x2="200" y2="150" class="track-line" />
-                
                 <line x1="200" y1="150" x2="600" y2="100" class="track-line" opacity="0.5" />
                 <text x="550" y="90" fill="#555" font-family="monospace" font-size="12">TRACK 1</text>
-
                 <line x1="200" y1="150" x2="600" y2="200" class="track-line" opacity="0.5" />
                 <text x="550" y="230" fill="#555" font-family="monospace" font-size="12">TRACK 2</text>
-
                 <line id="game-switch" x1="200" y1="150" x2="300" y2="135" class="switch-line" onclick="toggleSwitch()" />
-
                 <line x1="180" y1="120" x2="180" y2="150" stroke="#333" stroke-width="2" />
                 <circle id="game-signal" cx="180" cy="120" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal()" />
-
                 <rect id="game-train" x="20" y="144" width="40" height="12" rx="2" fill="white" />
             </svg>
         </div>
-
-        <div class="game-controls">
-            <button class="action-btn" onclick="startTrain()">START TRAIN</button>
-            <button class="action-btn secondary" onclick="initGame()">RESET</button>
-        </div>
-        
-        <div style="font-size: 0.9rem; color: #94a3b8; margin-top: 15px;">
-            <i class="fa-solid fa-computer-mouse"></i> Click the <b>Blue Line</b> (Switch) and the <b>Red Light</b> (Signal).
-        </div>
+        <div class="game-controls"><button class="action-btn" onclick="startTrain()">START TRAIN</button><button class="action-btn secondary" onclick="initGame()">RESET</button></div>
+        <div style="font-size: 0.9rem; color: #94a3b8; margin-top: 15px;"><i class="fa-solid fa-computer-mouse"></i> Click the <b>Blue Line</b> (Switch) and the <b>Red Light</b> (Signal).</div>
     `;
-
-    // Reset variables
     gameState = { signal: 'red', switch: 'top', trainMoving: false, trainX: 20 };
-    if (gameInterval) clearInterval(gameInterval);
 }
 
 function toggleSignal() {
     if (gameState.trainMoving) return;
-
     const signalEl = document.getElementById('game-signal');
     if (gameState.signal === 'red') {
         gameState.signal = 'green';
@@ -280,7 +220,6 @@ function toggleSignal() {
 
 function toggleSwitch() {
     if (gameState.trainMoving) return;
-
     const switchEl = document.getElementById('game-switch');
     if (gameState.switch === 'top') {
         gameState.switch = 'bottom';
@@ -295,49 +234,35 @@ function toggleSwitch() {
 
 function startTrain() {
     if (gameState.trainMoving) return;
-    
     gameState.trainMoving = true;
     const statusEl = document.getElementById('game-status');
     const trainEl = document.getElementById('game-train');
     
     statusEl.innerText = "TRAIN DEPARTING...";
-    statusEl.style.color = "#fbbf24"; // Jaune
+    statusEl.style.color = "#fbbf24";
 
     let position = 20;
-    let speed = 3;
+    let speed = 2;
 
-    // Boucle d'animation
-    gameInterval = setInterval(() => {
+    const interval = setInterval(() => {
         position += speed;
-        
-        // Calcul de la hauteur Y du train (pour suivre les rails)
         let currentY = 144;
         
         if (position > 200) {
-            // Après l'aiguillage, on monte ou on descend
-            if (gameState.switch === 'top') {
-                currentY = 144 - (position - 200) * 0.12; 
-            } else {
-                currentY = 144 + (position - 200) * 0.12;
-            }
+            if (gameState.switch === 'top') currentY = 144 - (position - 200) * 0.12; 
+            else currentY = 144 + (position - 200) * 0.12;
         }
-        
         trainEl.setAttribute('x', position);
         trainEl.setAttribute('y', currentY);
 
-        // --- CONDITIONS DE FIN ---
-
-        // 1. Feu Rouge (SPAD)
         if (gameState.signal === 'red' && position > 140 && position < 150) {
-            clearInterval(gameInterval);
+            clearInterval(interval);
             statusEl.innerText = "ALARM: SPAD (Signal Passed at Danger)! GAME OVER.";
             statusEl.style.color = "#ef4444";
             trainEl.setAttribute('fill', '#ef4444');
         }
-
-        // 2. Arrivée (Victoire ou Défaite)
         if (position > 580) {
-            clearInterval(gameInterval);
+            clearInterval(interval);
             if(gameState.switch === 'bottom') {
                 statusEl.innerText = "SUCCESS: Train arrived safely at Track 2.";
                 statusEl.style.color = "#22c55e";
@@ -347,6 +272,5 @@ function startTrain() {
                 statusEl.style.color = "#fbbf24";
             }
         }
-
-    }, 16); // ~60 FPS
+    }, 16);
 }
