@@ -1,5 +1,5 @@
 /* =============================
-   1. VARIABLES & RESET (GLOBAL)
+   1. VARIABLES & RESET
    ============================= */
 :root {
     --bg-dark: #0f172a;
@@ -8,7 +8,7 @@
     --accent-hover: #0891b2;
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
-    --glass: rgba(30, 41, 59, 0.85);
+    --glass: rgba(30, 41, 59, 0.9);
     --border: rgba(255, 255, 255, 0.1);
     --correct: #22c55e;
     --wrong: #ef4444;
@@ -25,18 +25,17 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     height: 100vh;
-    overflow: hidden; /* Pas de scroll sur la page entière (géré par zones) */
+    overflow: hidden;
 }
 
 /* =============================
-   2. LAYOUT PRINCIPAL (VERSION PC)
+   2. LAYOUT PRINCIPAL
    ============================= */
 .app-container {
     display: flex;
     height: 100%;
 }
 
-/* ----- Sidebar (Gauche) ----- */
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-bg);
@@ -44,7 +43,7 @@ body {
     flex-direction: column;
     padding: 30px 20px;
     border-right: 1px solid var(--border);
-    flex-shrink: 0; /* Empêche de rétrécir */
+    flex-shrink: 0;
 }
 
 .logo {
@@ -80,25 +79,11 @@ body {
     gap: 12px;
 }
 
-.menu-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-main);
-}
+.menu-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+.menu-btn.active { background: var(--accent); color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
 
-.menu-btn.active {
-    background: var(--accent);
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
-}
+.footer-note { font-size: 12px; color: var(--text-muted); text-align: center; }
 
-.footer-note {
-    font-size: 12px;
-    color: var(--text-muted);
-    text-align: center;
-}
-
-/* ----- Zone de Contenu (Droite) ----- */
 .content {
     flex: 1;
     display: flex;
@@ -107,11 +92,11 @@ body {
     background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 60%);
     padding: 20px;
     position: relative;
-    overflow-y: auto; /* Permet le scroll si le contenu est trop grand */
+    overflow-y: auto;
 }
 
 /* =============================
-   3. DESIGN DES CARTES (GLASSMORPHISM)
+   3. GLASS CARD & TEXT
    ============================= */
 .glass-card {
     background: var(--glass);
@@ -127,12 +112,7 @@ body {
     animation: fadeIn 0.5s ease-out;
 }
 
-.card-icon {
-    font-size: 45px;
-    color: var(--accent);
-    margin-bottom: 15px;
-}
-
+.card-icon { font-size: 45px; color: var(--accent); margin-bottom: 15px; }
 h1 { font-size: 2.2rem; margin-bottom: 10px; }
 #sub-title { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
 
@@ -160,58 +140,17 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
 }
 
 .action-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
-
-.action-btn.secondary {
-    background: transparent;
-    border: 2px solid var(--accent);
-    color: var(--accent);
-}
-
+.action-btn.secondary { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
 .action-btn.secondary:hover { background: var(--accent); color: white; }
 
-.fact-counter {
-    display: block;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-bottom: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+.fact-counter { display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
 
 /* =============================
-   5. STYLE DU QUIZ
+   5. QUIZ STYLES
    ============================= */
-.score-badge {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: var(--accent);
-    font-weight: 700;
-    margin-bottom: 20px;
-    display: inline-block;
-}
-
-.quiz-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.option-btn {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border);
-    color: white;
-    padding: 20px;
-    border-radius: 12px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.2s;
-    font-family: inherit;
-}
-
+.score-badge { background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; color: var(--accent); font-weight: 700; margin-bottom: 20px; display: inline-block; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+.option-btn { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); color: white; padding: 20px; border-radius: 12px; font-size: 1rem; cursor: pointer; transition: 0.2s; font-family: inherit; }
 .option-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); border-color: var(--accent); }
 .option-btn.correct { background: var(--correct) !important; border-color: var(--correct); color: #000; font-weight: 600; }
 .option-btn.wrong { background: var(--wrong) !important; border-color: var(--wrong); opacity: 0.7; }
@@ -219,25 +158,11 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
 /* =============================
    6. NEWS SECTION
    ============================= */
-.news-container {
-    text-align: left;
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 10px;
-}
+.news-container { text-align: left; max-height: 400px; overflow-y: auto; padding-right: 10px; }
 .news-container::-webkit-scrollbar { width: 6px; }
 .news-container::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
 .news-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-.news-card {
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: transform 0.2s;
-}
-
+.news-card { background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; transition: transform 0.2s; }
 .news-card:hover { border-color: var(--accent); transform: translateX(5px); }
 .news-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .news-tag { background: var(--accent); color: white; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; }
@@ -246,112 +171,10 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
 .news-excerpt { font-size: 0.95rem; color: #cbd5e1; line-height: 1.5; }
 
 /* =============================
-   7. LOGO / CREDITS
+   7. SIGNAL SIM GAME (Jeu)
    ============================= */
-.credits {
-    position: fixed;
-    bottom: 25px;
-    right: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0px;
-    z-index: 1000;
-    opacity: 0.8;
-    pointer-events: none;
-    transition: opacity 0.3s;
-}
-
-.credits:hover { opacity: 1; }
-.credits span { font-size: 10px; color: rgba(255, 255, 255, 0.5); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-right: 2px; }
-.credits img { height: 60px; width: auto; display: block; margin-top: 5px; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* =================================================================
-   9. OPTIMISATION MOBILE (S'active UNIQUEMENT sur petit écran)
-   ================================================================= */
-@media (max-width: 768px) {
-    
-    /* Layout Vertical */
-    .app-container {
-        flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    /* Navbar Horizontale en haut */
-    .sidebar {
-        width: 100%;
-        height: auto;
-        min-height: 60px;
-        padding: 10px 15px;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        background: var(--sidebar-bg);
-        z-index: 100;
-    }
-
-    /* Logo Mobile */
-    .logo { font-size: 18px; margin-bottom: 0; margin-right: 10px; }
-    .logo span { display: none; } /* Cache le texte "LineTrack" */
-
-    /* Menu Mobile */
-    .menu { flex-direction: row; gap: 5px; flex: 1; justify-content: flex-end; }
-
-    /* Boutons Ronds */
-    .menu-btn {
-        padding: 10px;
-        font-size: 18px;
-        border-radius: 50%;
-        justify-content: center;
-        width: 45px;
-        height: 45px;
-    }
-    .menu-btn span { display: none; } /* Cache le texte des boutons */
-    .footer-note { display: none; }
-
-    /* Contenu Mobile */
-    .content {
-        padding: 15px;
-        align-items: flex-start;
-        padding-bottom: 80px; /* Espace pour le scroll */
-    }
-
-    .glass-card {
-        padding: 25px 20px;
-        margin-top: 20px;
-        margin-bottom: 40px;
-        max-width: 100%;
-    }
-
-    h1 { font-size: 1.8rem; }
-    
-    /* Quiz empilé */
-    .quiz-options { grid-template-columns: 1fr; gap: 10px; }
-    .option-btn { padding: 15px; font-size: 0.95rem; }
-
-    /* Logo Credits Mobile */
-    .credits { bottom: 10px; right: 10px; opacity: 0.6; }
-    .credits span { font-size: 8px; }
-    .credits img { height: 35px; }
-    
-    /* Boutons Larges */
-    .action-btn { width: 100%; margin-bottom: 10px; }
-    .btn-group { flex-direction: column; gap: 10px; width: 100%; }
-   /* =============================
-   10. SIGNAL SIM GAME
-   ============================= */
-
-/* Le plateau de jeu */
 .game-board {
-    background-color: #000000; /* Fond noir comme la photo */
+    background-color: #000000;
     border: 2px solid #333;
     border-radius: 10px;
     width: 100%;
@@ -363,52 +186,47 @@ h1 { font-size: 2.2rem; margin-bottom: 10px; }
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
 }
 
-/* Les rails (SVG) */
-.track-line {
-    stroke: #555; /* Gris foncé */
-    stroke-width: 6;
-    stroke-linecap: round;
+.track-line { stroke: #555; stroke-width: 6; stroke-linecap: round; }
+.switch-line { stroke: #06b6d4; stroke-width: 6; cursor: pointer; transition: all 0.3s ease; }
+.switch-line:hover { stroke: #fff; }
+.signal-light { cursor: pointer; transition: fill 0.2s; filter: drop-shadow(0 0 5px currentColor); }
+.game-controls { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+.status-text { font-family: 'Courier New', monospace; color: #06b6d4; margin-bottom: 15px; font-weight: bold; }
+
+/* =============================
+   8. CREDITS (Logo)
+   ============================= */
+.credits {
+    position: fixed; bottom: 25px; right: 30px;
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 0px; z-index: 1000; opacity: 0.8; pointer-events: none; transition: opacity 0.3s;
 }
+.credits:hover { opacity: 1; }
+.credits span { font-size: 10px; color: rgba(255, 255, 255, 0.5); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-right: 2px; }
+.credits img { height: 60px; width: auto; display: block; margin-top: 5px; }
 
-/* L'aiguillage (Switch) */
-.switch-line {
-    stroke: #06b6d4; /* Bleu Cyan */
-    stroke-width: 6;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-.switch-line:hover {
-    stroke: #fff;
-}
-
-/* Les Signaux */
-.signal-light {
-    cursor: pointer;
-    transition: fill 0.2s;
-    filter: drop-shadow(0 0 5px currentColor);
-}
-
-/* Le Train */
-.train-obj {
-    fill: #ffffff;
-    width: 40px;
-    height: 12px;
-    transition: transform 0.1s linear;
-}
-
-/* Panneau de contrôle du jeu */
-.game-controls {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 15px;
-}
-
-.status-text {
-    font-family: 'Courier New', monospace;
-    color: #06b6d4;
-    margin-bottom: 15px;
-    font-weight: bold;
-
+/* =============================
+   9. RESPONSIVE MOBILE
+   ============================= */
+@media (max-width: 768px) {
+    .app-container { flex-direction: column; height: 100vh; overflow: hidden; }
+    .sidebar { width: 100%; height: auto; min-height: 60px; padding: 10px 15px; flex-direction: row; justify-content: space-around; align-items: center; border-right: none; border-bottom: 1px solid var(--border); background: var(--sidebar-bg); z-index: 100; }
+    .logo { font-size: 18px; margin-bottom: 0; margin-right: 10px; }
+    .logo span { display: none; }
+    .menu { flex-direction: row; gap: 5px; flex: 1; justify-content: flex-end; }
+    .menu-btn { padding: 10px; font-size: 18px; border-radius: 50%; justify-content: center; width: 45px; height: 45px; }
+    .menu-btn span { display: none; }
+    .footer-note { display: none; }
+    .content { padding: 15px; align-items: flex-start; padding-bottom: 80px; }
+    .glass-card { padding: 25px 20px; margin-top: 20px; margin-bottom: 40px; max-width: 100%; }
+    h1 { font-size: 1.8rem; }
+    .quiz-options { grid-template-columns: 1fr; gap: 10px; }
+    .option-btn { padding: 15px; font-size: 0.95rem; }
+    .credits { bottom: 10px; right: 10px; opacity: 0.6; }
+    .credits span { font-size: 8px; }
+    .credits img { height: 35px; }
+    .action-btn { width: 100%; margin-bottom: 10px; }
+    .btn-group { flex-direction: column; gap: 10px; width: 100%; }
 }
