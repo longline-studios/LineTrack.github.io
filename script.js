@@ -53,12 +53,13 @@ const POINTS_PER_Q = 100;
 
 // Game State Variables
 let currentLevel = 1;
+// We now support multiple signals (signal1, signal2)
 let gameState = { 
-    signal: 'red', 
+    signal1: 'red', 
+    signal2: 'red', 
     switch1: 'top', 
-    switch2: 'top', // For Level 2
-    trainMoving: false, 
-    trainX: 20 
+    switch2: 'top', 
+    trainMoving: false 
 };
 let gameInterval = null;
 
@@ -199,7 +200,7 @@ function initNews() {
 }
 
 /* =========================================================
-   8. GAME LOGIC (LEVELS + ROTATION)
+   8. GAME LOGIC (3 LEVELS)
    ========================================================= */
 
 function initGame() {
@@ -207,283 +208,295 @@ function initGame() {
     titleEl.innerText = `Signal Simulator - Level ${currentLevel}`;
     
     // Reset State
-    gameState = { signal: 'red', switch1: 'top', switch2: 'top', trainMoving: false };
+    gameState = { signal1: 'red', signal2: 'red', switch1: 'top', switch2: 'top', trainMoving: false };
     if (gameInterval) clearInterval(gameInterval);
 
     if (currentLevel === 1) {
-        subEl.innerText = "Mission: Guide the train to TRACK 2 (Bottom).";
+        subEl.innerText = "Mission: Guide the WHITE train to TRACK 2 (Bottom).";
         renderLevel1();
-    } else {
+    } else if (currentLevel === 2) {
         subEl.innerText = "Mission: Avoid the Dead End. Reach TRACK 3 (Bottom).";
         renderLevel2();
+    } else if (currentLevel === 3) {
+        subEl.innerText = "Mission: Stop the GREY train! Merge safely to Top Track.";
+        renderLevel3();
     }
 }
 
+/* --- LEVEL 1 RENDER --- */
 function renderLevel1() {
     dynamicArea.innerHTML = `
         <div class="status-text" id="game-status">LEVEL 1: READY.</div>
-        <div class="game-board" id="board">
+        <div class="game-board">
             <svg width="100%" height="100%" viewBox="0 0 600 300">
-                <!-- Tracks -->
                 <line x1="0" y1="150" x2="200" y2="150" class="track-line" />
                 <line x1="200" y1="150" x2="600" y2="100" class="track-line" opacity="0.5" />
                 <text x="540" y="90" fill="#555" font-family="monospace" font-size="12">TRACK 1</text>
                 <line x1="200" y1="150" x2="600" y2="200" class="track-line" opacity="0.5" />
                 <text x="540" y="230" fill="#555" font-family="monospace" font-size="12">TRACK 2</text>
-
-                <!-- Switch 1 -->
                 <line id="sw1" x1="200" y1="150" x2="300" y2="135" class="switch-line" onclick="toggleSwitch(1)" />
-
-                <!-- Signal -->
                 <line x1="180" y1="120" x2="180" y2="150" stroke="#333" stroke-width="2" />
-                <circle id="sig" cx="180" cy="120" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal()" />
-
-                <!-- Train -->
-                <rect id="game-train" x="20" y="144" width="40" height="12" rx="2" fill="white" />
+                <circle id="sig1" cx="180" cy="120" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal(1)" />
+                <rect id="train1" x="20" y="144" width="40" height="12" rx="2" fill="white" />
             </svg>
         </div>
-        <div class="game-controls">
-            <button class="action-btn" onclick="startTrainLvl1()">START TRAIN</button>
-            <button class="action-btn secondary" onclick="initGame()">RESET</button>
-        </div>
-        <div style="font-size: 0.9rem; color: #94a3b8; margin-top: 15px;">Click Blue Lines (Switch) and Red Light (Signal).</div>
+        <div class="game-controls"><button class="action-btn" onclick="startLevel1()">START</button><button class="action-btn secondary" onclick="initGame()">RESET</button></div>
     `;
 }
 
+/* --- LEVEL 2 RENDER --- */
 function renderLevel2() {
     dynamicArea.innerHTML = `
         <div class="status-text" id="game-status">LEVEL 2: COMPLEX JUNCTION.</div>
-        <div class="game-board" id="board">
+        <div class="game-board">
             <svg width="100%" height="100%" viewBox="0 0 600 300">
-                <!-- Track Start -->
                 <line x1="0" y1="150" x2="150" y2="150" class="track-line" />
-                
-                <!-- Split 1 -->
-                <line x1="150" y1="150" x2="500" y2="50" class="track-line" opacity="0.5" /> <!-- Top (Dead End) -->
+                <line x1="150" y1="150" x2="500" y2="50" class="track-line" opacity="0.5" />
                 <text x="510" y="55" fill="#ef4444" font-family="monospace" font-size="12">DEAD END</text>
-                
-                <line x1="150" y1="150" x2="350" y2="200" class="track-line" opacity="0.5" /> <!-- Middle -->
-
-                <!-- Split 2 (Starts at x=350, y=200) -->
-                <line x1="350" y1="200" x2="600" y2="200" class="track-line" opacity="0.5" /> <!-- Track 2 -->
+                <line x1="150" y1="150" x2="350" y2="200" class="track-line" opacity="0.5" />
+                <line x1="350" y1="200" x2="600" y2="200" class="track-line" opacity="0.5" />
                 <text x="540" y="190" fill="#555" font-family="monospace" font-size="12">TRACK 2</text>
-                
-                <line x1="350" y1="200" x2="600" y2="280" class="track-line" opacity="0.5" /> <!-- Track 3 -->
+                <line x1="350" y1="200" x2="600" y2="280" class="track-line" opacity="0.5" />
                 <text x="540" y="270" fill="#555" font-family="monospace" font-size="12">TRACK 3</text>
-
-                <!-- Switch 1 (Left) -->
                 <line id="sw1" x1="150" y1="150" x2="230" y2="130" class="switch-line" onclick="toggleSwitch(1)" />
-                
-                <!-- Switch 2 (Right) -->
                 <line id="sw2" x1="350" y1="200" x2="430" y2="200" class="switch-line" onclick="toggleSwitch(2)" />
-
-                <!-- Signal -->
                 <line x1="120" y1="120" x2="120" y2="150" stroke="#333" stroke-width="2" />
-                <circle id="sig" cx="120" cy="120" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal()" />
-
-                <!-- Train -->
-                <rect id="game-train" x="20" y="144" width="40" height="12" rx="2" fill="white" />
+                <circle id="sig1" cx="120" cy="120" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal(1)" />
+                <rect id="train1" x="20" y="144" width="40" height="12" rx="2" fill="white" />
             </svg>
         </div>
-        <div class="game-controls">
-            <button class="action-btn" onclick="startTrainLvl2()">START TRAIN</button>
-            <button class="action-btn secondary" onclick="initGame()">RESET</button>
-        </div>
+        <div class="game-controls"><button class="action-btn" onclick="startLevel2()">START</button><button class="action-btn secondary" onclick="initGame()">RESET</button></div>
     `;
 }
 
-function toggleSignal() {
+/* --- LEVEL 3 RENDER (CONFLICT) --- */
+function renderLevel3() {
+    dynamicArea.innerHTML = `
+        <div class="status-text" id="game-status">LEVEL 3: COLLISION COURSE.</div>
+        <div class="game-board">
+            <svg width="100%" height="100%" viewBox="0 0 600 300">
+                <!-- Top Track (AI) -->
+                <line x1="0" y1="100" x2="600" y2="100" class="track-line" />
+                <text x="10" y="80" fill="#888" font-family="monospace" font-size="12">AI LINE</text>
+
+                <!-- Bottom Track (Player) merges to Top -->
+                <line x1="0" y1="220" x2="300" y2="220" class="track-line" />
+                <line x1="300" y1="220" x2="500" y2="100" class="track-line" opacity="0.5" /> <!-- Merge Path -->
+                <text x="10" y="250" fill="#fff" font-family="monospace" font-size="12">YOUR LINE</text>
+
+                <!-- Switch (Merging) -->
+                <line id="sw1" x1="300" y1="220" x2="400" y2="220" class="switch-line" onclick="toggleSwitch(1)" />
+
+                <!-- Signal 1 (Player - Bottom) -->
+                <line x1="250" y1="190" x2="250" y2="220" stroke="#333" stroke-width="2" />
+                <circle id="sig1" cx="250" cy="190" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal(1)" />
+                <text x="235" y="180" fill="#fff" font-size="10">YOU</text>
+
+                <!-- Signal 2 (AI - Top) -->
+                <line x1="250" y1="70" x2="250" y2="100" stroke="#333" stroke-width="2" />
+                <circle id="sig2" cx="250" cy="70" r="8" fill="#ef4444" class="signal-light" onclick="toggleSignal(2)" />
+                <text x="240" y="60" fill="#888" font-size="10">AI</text>
+
+                <!-- Trains -->
+                <rect id="train1" x="20" y="214" width="40" height="12" rx="2" fill="white" /> <!-- Player -->
+                <rect id="train2" x="20" y="94" width="40" height="12" rx="2" fill="#94a3b8" /> <!-- AI (Grey) -->
+            </svg>
+        </div>
+        <div class="game-controls"><button class="action-btn" onclick="startLevel3()">START</button><button class="action-btn secondary" onclick="initGame()">RESET</button></div>
+        <div style="font-size: 0.9rem; color: #94a3b8; margin-top: 15px;">Warning: Two trains. One track. Stop the AI train!</div>
+    `;
+}
+
+/* --- CONTROLS --- */
+function toggleSignal(id) {
     if (gameState.trainMoving) return;
-    const sig = document.getElementById('sig');
-    if (gameState.signal === 'red') {
-        gameState.signal = 'green';
-        sig.setAttribute('fill', '#22c55e');
+    const key = `signal${id}`;
+    const el = document.getElementById(`sig${id}`);
+    
+    if (gameState[key] === 'red') {
+        gameState[key] = 'green';
+        el.setAttribute('fill', '#22c55e');
     } else {
-        gameState.signal = 'red';
-        sig.setAttribute('fill', '#ef4444');
+        gameState[key] = 'red';
+        el.setAttribute('fill', '#ef4444');
     }
 }
 
-function toggleSwitch(num) {
+function toggleSwitch(id) {
     if (gameState.trainMoving) return;
-    const sw = document.getElementById(`sw${num}`);
-    const key = `switch${num}`; // 'switch1' or 'switch2'
+    const key = `switch${id}`;
+    const el = document.getElementById(`sw${id}`);
 
     if (currentLevel === 1) {
         if (gameState[key] === 'top') {
             gameState[key] = 'bottom';
-            sw.setAttribute('x2', '300'); sw.setAttribute('y2', '165');
+            el.setAttribute('x2', '300'); el.setAttribute('y2', '165');
         } else {
             gameState[key] = 'top';
-            sw.setAttribute('x2', '300'); sw.setAttribute('y2', '135');
+            el.setAttribute('x2', '300'); el.setAttribute('y2', '135');
         }
-    } 
-    else if (currentLevel === 2) {
-        if (num === 1) {
-            // Switch 1: Top (Dead End) vs Bottom (Middle Path)
+    } else if (currentLevel === 2) {
+        if (id === 1) { // Lvl 2 Sw 1
             if (gameState.switch1 === 'top') {
-                gameState.switch1 = 'bottom';
-                sw.setAttribute('x2', '230'); sw.setAttribute('y2', '170'); // Point Down
+                gameState.switch1 = 'bottom'; el.setAttribute('x2', '230'); el.setAttribute('y2', '170');
             } else {
-                gameState.switch1 = 'top';
-                sw.setAttribute('x2', '230'); sw.setAttribute('y2', '130'); // Point Up
+                gameState.switch1 = 'top'; el.setAttribute('x2', '230'); el.setAttribute('y2', '130');
             }
-        } else {
-            // Switch 2: Top (Track 2) vs Bottom (Track 3)
+        } else { // Lvl 2 Sw 2
             if (gameState.switch2 === 'top') {
-                gameState.switch2 = 'bottom';
-                sw.setAttribute('x2', '430'); sw.setAttribute('y2', '225'); // Point Down
+                gameState.switch2 = 'bottom'; el.setAttribute('x2', '430'); el.setAttribute('y2', '225');
             } else {
-                gameState.switch2 = 'top';
-                sw.setAttribute('x2', '430'); sw.setAttribute('y2', '200'); // Point Straight
+                gameState.switch2 = 'top'; el.setAttribute('x2', '430'); el.setAttribute('y2', '200');
             }
+        }
+    } else if (currentLevel === 3) {
+        // Lvl 3: Switch merges bottom to top
+        if (gameState.switch1 === 'top') {
+            gameState.switch1 = 'bottom'; // Go Straight (Crash into end of line)
+            el.setAttribute('x2', '400'); el.setAttribute('y2', '220');
+        } else {
+            gameState.switch1 = 'top'; // Merge Up (Correct path)
+            el.setAttribute('x2', '400'); el.setAttribute('y2', '160');
         }
     }
 }
 
 /* --- PHYSICS LEVEL 1 --- */
-function startTrainLvl1() {
+function startLevel1() {
     if (gameState.trainMoving) return;
     gameState.trainMoving = true;
-    const trainEl = document.getElementById('game-train');
-    const statusEl = document.getElementById('game-status');
-    statusEl.innerText = "TRAIN MOVING..."; statusEl.style.color = "#fbbf24";
+    const t1 = document.getElementById('train1');
+    const status = document.getElementById('game-status');
+    status.innerText = "TRAIN MOVING..."; status.style.color = "#fbbf24";
 
-    let pos = 20;
-    let angle = 0;
+    let pos = 20; let angle = 0;
 
     gameInterval = setInterval(() => {
-        pos += 3;
-        let y = 144;
-
-        // Logic for Y position & Rotation
+        pos += 3; let y = 144;
         if (pos > 200) {
-            if (gameState.switch1 === 'top') {
-                y = 144 - (pos - 200) * 0.125; // Slope Up
-                angle = -7; // Rotate Up
-            } else {
-                y = 144 + (pos - 200) * 0.125; // Slope Down
-                angle = 7; // Rotate Down
-            }
+            if (gameState.switch1 === 'top') { y = 144 - (pos - 200) * 0.125; angle = -7; } 
+            else { y = 144 + (pos - 200) * 0.125; angle = 7; }
         }
+        t1.setAttribute('x', pos); t1.setAttribute('y', y);
+        t1.setAttribute('transform', `rotate(${angle}, ${pos+20}, ${y+6})`);
 
-        // Apply Position & Rotation
-        trainEl.setAttribute('x', pos);
-        trainEl.setAttribute('y', y);
-        // Rotate around center of train (pos + 20, y + 6)
-        trainEl.setAttribute('transform', `rotate(${angle}, ${pos + 20}, ${y + 6})`);
-
-        // Check Signal Crash
-        if (gameState.signal === 'red' && pos > 140 && pos < 150) {
-            endGame("CRASH: Signal was RED!", false);
-        }
-
-        // Check Win/Loss
+        if (gameState.signal1 === 'red' && pos > 140 && pos < 150) endGame("CRASH: Signal RED!", false);
         if (pos > 580) {
-            if (gameState.switch1 === 'bottom') {
-                endGame("LEVEL 1 COMPLETE! Next level...", true);
-            } else {
-                endGame("WRONG TRACK! Train sent to Track 1.", false);
-            }
+            if (gameState.switch1 === 'bottom') endGame("LEVEL 1 COMPLETE!", true);
+            else endGame("WRONG TRACK!", false);
         }
     }, 16);
 }
 
 /* --- PHYSICS LEVEL 2 --- */
-function startTrainLvl2() {
+function startLevel2() {
     if (gameState.trainMoving) return;
     gameState.trainMoving = true;
-    const trainEl = document.getElementById('game-train');
-    const statusEl = document.getElementById('game-status');
-    statusEl.innerText = "TRAIN MOVING..."; statusEl.style.color = "#fbbf24";
+    const t1 = document.getElementById('train1');
+    const status = document.getElementById('game-status');
+    status.innerText = "TRAIN MOVING..."; status.style.color = "#fbbf24";
 
-    let pos = 20;
-    let angle = 0;
+    let pos = 20; let angle = 0;
 
     gameInterval = setInterval(() => {
-        pos += 3;
-        let y = 144;
-
-        // Segment 1: Start to Switch 1 (x=150)
-        if (pos < 150) {
-            y = 144;
-            angle = 0;
-        }
-        // Segment 2: After Switch 1
+        pos += 3; let y = 144;
+        if (pos < 150) { y = 144; angle = 0; }
         else if (pos >= 150 && pos < 350) {
-            if (gameState.switch1 === 'top') {
-                // Going to Dead End (Up)
-                y = 144 - (pos - 150) * 0.28;
-                angle = -15;
-            } else {
-                // Going to Switch 2 (Down)
-                y = 144 + (pos - 150) * 0.25;
-                angle = 14;
+            if (gameState.switch1 === 'top') { y = 144 - (pos - 150) * 0.28; angle = -15; }
+            else { y = 144 + (pos - 150) * 0.25; angle = 14; }
+        } else if (pos >= 350) {
+            if (gameState.switch1 === 'top') y = 144 - (pos - 150) * 0.28;
+            else {
+                let startY = 194;
+                if (gameState.switch2 === 'top') { y = startY; angle = 0; }
+                else { y = startY + (pos - 350) * 0.3; angle = 16; }
             }
         }
-        // Segment 3: After Switch 2 (x=350, y starts at ~194)
-        else if (pos >= 350) {
-            if (gameState.switch1 === 'top') {
-                // Still on dead end track
-                y = 144 - (pos - 150) * 0.28;
-            } else {
-                // We are at Switch 2
-                let startY = 144 + (200) * 0.25; // y at 350 is roughly 194
-                if (gameState.switch2 === 'top') {
-                    // Straight to Track 2
-                    y = startY; 
-                    angle = 0;
-                } else {
-                    // Down to Track 3
-                    y = startY + (pos - 350) * 0.3;
-                    angle = 16;
-                }
-            }
-        }
+        t1.setAttribute('x', pos); t1.setAttribute('y', y);
+        t1.setAttribute('transform', `rotate(${angle}, ${pos+20}, ${y+6})`);
 
-        // Apply Updates
-        trainEl.setAttribute('x', pos);
-        trainEl.setAttribute('y', y);
-        trainEl.setAttribute('transform', `rotate(${angle}, ${pos + 20}, ${y + 6})`);
-
-        // Check Signal
-        if (gameState.signal === 'red' && pos > 80 && pos < 90) {
-            endGame("CRASH: Signal RED!", false);
-        }
-
-        // Check Crashes
-        if (pos > 500 && gameState.switch1 === 'top') {
-            endGame("CRASH: Dead End!", false);
-        }
-
-        // Check Win
+        if (gameState.signal1 === 'red' && pos > 80 && pos < 90) endGame("CRASH: Signal RED!", false);
+        if (pos > 500 && gameState.switch1 === 'top') endGame("CRASH: Dead End!", false);
         if (pos > 580) {
-            if (gameState.switch1 === 'bottom' && gameState.switch2 === 'bottom') {
-                endGame("SUCCESS! TRACK 3 REACHED!", true);
-            } else if (gameState.switch1 === 'bottom' && gameState.switch2 === 'top') {
-                endGame("WRONG TRACK (Track 2).", false);
+            if (gameState.switch1 === 'bottom' && gameState.switch2 === 'bottom') endGame("LEVEL 2 COMPLETE!", true);
+            else endGame("WRONG TRACK!", false);
+        }
+    }, 16);
+}
+
+/* --- PHYSICS LEVEL 3 (CONFLICT) --- */
+function startLevel3() {
+    if (gameState.trainMoving) return;
+    gameState.trainMoving = true;
+    const t1 = document.getElementById('train1'); // Player
+    const t2 = document.getElementById('train2'); // AI
+    const status = document.getElementById('game-status');
+    status.innerText = "TRAINS MOVING..."; status.style.color = "#fbbf24";
+
+    let p1 = 20; let p2 = 20; // Positions
+    let y1 = 220; let y2 = 100;
+    let a1 = 0;
+
+    gameInterval = setInterval(() => {
+        // Move AI Train (Train 2)
+        if (gameState.signal2 === 'green' || p2 < 210 || p2 > 260) {
+            p2 += 4; // AI moves faster!
+        }
+        t2.setAttribute('x', p2);
+
+        // Move Player Train (Train 1)
+        if (gameState.signal1 === 'green' || p1 < 210 || p1 > 260) {
+            p1 += 3;
+        }
+
+        // Logic for Player Merging
+        if (p1 > 300) {
+            if (gameState.switch1 === 'top') { // Merge Up
+                y1 = 220 - (p1 - 300) * 0.6;
+                a1 = -30;
+                // Cap Y so it stays on main line
+                if (y1 < 100) { y1 = 100; a1 = 0; }
+            } else { // Straight (Crash)
+                y1 = 220; a1 = 0;
             }
         }
+        
+        t1.setAttribute('x', p1); t1.setAttribute('y', y1);
+        t1.setAttribute('transform', `rotate(${a1}, ${p1+20}, ${y1+6})`);
+
+        // COLLISION CHECK
+        // If trains are close in X AND on the same Y line (close enough)
+        if (Math.abs(p1 - p2) < 45 && Math.abs(y1 - y2) < 20) {
+            endGame("CRASH! TRAINS COLLIDED!", false);
+        }
+
+        // FAIL: Player goes straight into nothing
+        if (p1 > 400 && gameState.switch1 === 'bottom') {
+            endGame("DERAILED! Use the switch.", false);
+        }
+
+        // WIN
+        if (p1 > 580) {
+            endGame("LEVEL 3 COMPLETE! MASTER SIGNALER!", true);
+        }
+
     }, 16);
 }
 
 function endGame(msg, win) {
     clearInterval(gameInterval);
     const statusEl = document.getElementById('game-status');
-    const trainEl = document.getElementById('game-train');
     statusEl.innerText = msg;
     
     if (win) {
         statusEl.style.color = "#22c55e";
-        trainEl.setAttribute('fill', '#22c55e');
-        if (currentLevel === 1) {
+        if (currentLevel < 3) {
             setTimeout(() => {
-                currentLevel = 2;
+                currentLevel++;
                 initGame();
-            }, 2000);
+            }, 2500);
         }
     } else {
         statusEl.style.color = "#ef4444";
-        trainEl.setAttribute('fill', '#ef4444');
     }
 }
