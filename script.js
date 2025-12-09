@@ -35,12 +35,36 @@ const quizData = [
     { q: "What is the highest railway line in the world?", options: ["Swiss Alps", "Qinghai-Tibet", "Rocky Mountaineer", "Andean Explorer"], correct: 1 }
 ];
 
-/* --- NEWS --- */
+/* --- NEWS (Updated Dec 5-9) --- */
 const newsData = [
-    { category: "Innovation", date: "Dec 05, 2025", title: "Hydrogen Trains Expand in Europe", content: "Germany and Italy are leading the way with new Coradia iLint trains that emit only water vapor." },
-    { category: "High Speed", date: "Nov 28, 2025", title: "New Speed Record Attempt Planned", content: "Engineers are preparing a modified Maglev prototype hoping to break the 603 km/h barrier next month in Japan." },
-    { category: "History", date: "Nov 15, 2025", title: "100 Years of the Flying Scotsman", content: "Celebrations are taking place across the UK to honor the world's most famous steam locomotive." },
-    { category: "Infrastructure", date: "Oct 30, 2025", title: "Night Trains Make a Comeback", content: "New sleeper services connecting Paris, Berlin, and Vienna have sold out in record time as travelers ditch planes for trains." }
+    { 
+        category: "Service Launch", 
+        date: "Dec 09, 2025", 
+        title: "New Nightjet Service Launches: Paris to Berlin", 
+        excerpt: "The first overnight train connecting the two capitals arrived this morning with zero delays.",
+        body: "A historic moment for European rail travel occurred this morning as the new ÖBB Nightjet service arrived at Berlin Hauptbahnhof from Paris. The train, fully booked with 400 passengers, offers a sustainable alternative to short-haul flights.\n\nThe service runs three times a week and features the new generation of sleeper cabins, offering private showers and wireless charging. 'This is the renaissance of the night train,' said the Transport Minister at the inauguration ceremony.\n\nTicket prices start at €29 for a seated ticket, making it highly competitive with budget airlines, while producing 90% less CO2."
+    },
+    { 
+        category: "Innovation", 
+        date: "Dec 08, 2025", 
+        title: "Battery Record: 220km on One Charge", 
+        excerpt: "Stadler's new FLIRT Akku prototype has shattered previous world records for battery range.",
+        body: "In a test run conducted in northern Germany, the new Stadler FLIRT Akku battery-electric train traveled 224 kilometers on a single battery charge, operating in freezing winter conditions.\n\nThis technology allows electric trains to run on non-electrified lines without using diesel engines. The batteries charge from overhead wires when available and take over when the wires end.\n\n'This proves that the age of diesel on branch lines is coming to an end,' stated the lead engineer. The train is expected to enter commercial service by late 2026."
+    },
+    { 
+        category: "Infrastructure", 
+        date: "Dec 06, 2025", 
+        title: "US Funding Approved for Texas High-Speed Line", 
+        excerpt: "The Federal Railroad Administration has greenlit the final funding package for the Dallas-Houston link.",
+        body: "The dream of Japanese-style Bullet Trains in Texas is one step closer to reality. Today, federal regulators approved a $12 billion loan package to kickstart construction on the Dallas to Houston high-speed rail corridor.\n\nThe project will use N700S Shinkansen technology imported from Japan, capable of speeds up to 200 mph (320 km/h). The journey time between the two major cities will be cut to under 90 minutes.\n\nConstruction is set to begin in Q1 2026, with an estimated completion date of 2031. Proponents say it will remove 15,000 cars from I-45 daily."
+    },
+    { 
+        category: "Fleet Update", 
+        date: "Dec 05, 2025", 
+        title: "Hydrogen Train Fleet Enters Service in Italy", 
+        excerpt: "The Valcamonica line is now fully operated by hydrogen-powered trains, replacing old diesel units.",
+        body: "Italy has become the second country in Europe, after Germany, to operate a fully hydrogen-powered railway line. The 'Coradia iLint' trains began regular passenger service today in the Valcamonica valley.\n\nThese trains emit nothing but steam and condensed water. They are powered by hydrogen fuel cells that generate electricity on board. The hydrogen is produced locally using hydroelectric power, making the entire cycle 100% green.\n\nPassengers have noted that the new trains are significantly quieter than the diesel predecessors."
+    }
 ];
 
 /* =========================================================
@@ -53,7 +77,6 @@ const POINTS_PER_Q = 100;
 
 // Game State Variables
 let currentLevel = 1;
-// We now support multiple signals (signal1, signal2)
 let gameState = { 
     signal1: 'red', 
     signal2: 'red', 
@@ -181,22 +204,46 @@ function showQuizResults() {
 }
 
 /* =========================================================
-   7. NEWS LOGIC
+   7. NEWS LOGIC (WITH FULL ARTICLE VIEW)
    ========================================================= */
 function initNews() {
     cardIcon.className = "fa-solid fa-newspaper";
     titleEl.innerText = "Rail News";
-    subEl.innerText = "Latest updates from the world of railways.";
+    subEl.innerText = "Latest updates from Dec 5 - Dec 9, 2025.";
+
     let htmlContent = '<div class="news-container">';
-    newsData.forEach(post => {
+    newsData.forEach((post, index) => {
+        // We add onclick="viewArticle(index)" to make it clickable
         htmlContent += `
-            <div class="news-card">
+            <div class="news-card" onclick="viewArticle(${index})">
                 <div class="news-header"><span class="news-tag">${post.category}</span><span class="news-date">${post.date}</span></div>
-                <div class="news-title">${post.title}</div><div class="news-excerpt">${post.content}</div>
+                <div class="news-title">${post.title}</div>
+                <div class="news-excerpt">${post.excerpt}</div>
+                <div class="read-more">Read Full Article &rarr;</div>
             </div>`;
     });
     htmlContent += '</div><div style="margin-top: 20px;"><button class="action-btn secondary" onclick="renderHome()">Back Home</button></div>';
     dynamicArea.innerHTML = htmlContent;
+}
+
+// Function to View Single Article
+function viewArticle(index) {
+    const post = newsData[index];
+    
+    // We replace the content with the full article
+    dynamicArea.innerHTML = `
+        <div class="article-view">
+            <div class="article-meta">
+                <span class="news-tag">${post.category}</span>
+                <span class="news-date" style="color:#fff;">${post.date}</span>
+            </div>
+            <div class="article-title">${post.title}</div>
+            <div class="article-body">${post.body}</div>
+        </div>
+        <div style="margin-top: 20px;">
+            <button class="action-btn" onclick="initNews()">Back to News</button>
+        </div>
+    `;
 }
 
 /* =========================================================
