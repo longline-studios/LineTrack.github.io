@@ -39,7 +39,7 @@ const quizData = [
 const newsData = [
     { 
         category: "Longline Studios", 
-        date: "Unknown date", 
+        date: "Dec 09, 2025", 
         title: "Official LineTrack Launch", 
         excerpt: "LineTrack is officially launched !",
         body: "Hello everyone, we are presenting you the new website about train stuff : LineTrack.\n\nLineTrack is an entertaining site with Facts, News, Quizzes and way much more about trains in general. The news will be updated every day, and the website improved all along the next days/weeks.\n\nWe appreciate your support and our team thanks you for your visit. You can check our Discord page at anytime at https://discord.gg/HDXFZtkEDQ"
