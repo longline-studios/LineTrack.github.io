@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LineTrack | Rail Knowledge</title>
     
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Updated version to v=3 -->
-    <link rel="stylesheet" href="style.css?v=3">
+    <!-- IMPORTANT: Version 1.4 -->
+    <link rel="stylesheet" href="style.css?v=1.5">
 </head>
 <body>
 
@@ -25,6 +24,12 @@
                 <button class="menu-btn active" id="btn-home">
                     <i class="fa-solid fa-house"></i> Home
                 </button>
+                
+                <!-- NEW BUTTON HERE -->
+                <button class="menu-btn" id="btn-school">
+                    <i class="fa-solid fa-graduation-cap"></i> Train School
+                </button>
+
                 <button class="menu-btn" id="btn-fact">
                     <i class="fa-solid fa-lightbulb"></i> Rail Facts
                 </button>
@@ -37,6 +42,10 @@
                 <button class="menu-btn" id="btn-game">
                     <i class="fa-solid fa-traffic-light"></i> Signal Sim
                 </button>
+                
+                <button class="menu-btn" id="btn-theme" style="margin-top: 20px; color: var(--accent);">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i> <span id="theme-text">Dark Mode</span>
+                </button>
             </div>
 
             <div class="footer-note">
@@ -47,23 +56,36 @@
         <!-- MAIN CONTENT -->
         <main class="content">
             <div id="card" class="glass-card">
-                <div class="card-icon"><i class="fa-solid fa-train"></i></div>
+                <div class="card-icon floating"><i class="fa-solid fa-train"></i></div>
+                
                 <h1 id="main-title">Welcome Aboard</h1>
                 <p id="sub-title">Explore the world of trains with facts and quizzes.</p>
                 
-                <!-- Dynamic Content loads here -->
                 <div id="dynamic-area"></div>
             </div>
         </main>
     </div>
 
-    <!-- CREDITS (Logo) -->
+    <!-- NEWS POPUP MODAL -->
+    <div id="news-modal" class="modal-overlay">
+        <div class="modal-content glass-card">
+            <button class="close-modal" onclick="closeNewsModal()">&times;</button>
+            <img id="modal-img" src="" alt="News Image" class="modal-image">
+            <div class="modal-body">
+                <span id="modal-tag" class="news-tag">Category</span>
+                <span id="modal-date" class="news-date">Date</span>
+                <h2 id="modal-title">Article Title</h2>
+                <div id="modal-text" class="article-text"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="credits">
         <span>Made by :</span>
         <img src="logo.png" alt="Longline Studios">
     </div>
 
-    <!-- Updated version to v=3 -->
-    <script src="script.js?v=3"></script>
+    <!-- IMPORTANT: Version 1.5 -->
+    <script src="script.js?v=1.5"></script>
 </body>
 </html>
