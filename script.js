@@ -35,7 +35,7 @@ const quizData = [
     { q: "What is the highest railway line in the world?", options: ["Swiss Alps", "Qinghai-Tibet", "Rocky Mountaineer", "Andean Explorer"], correct: 1 }
 ];
 
-/* --- NEWS (Updated) --- */
+/* --- NEWS --- */
 const newsData = [
     { 
         category: "Longline Studios", 
@@ -124,18 +124,56 @@ attachMenuEvent('btn-news', initNews);
 attachMenuEvent('btn-game', () => { currentLevel = 1; initGame(); });
 
 /* =========================================================
-   4. HOME LOGIC
+   4. HOME LOGIC (UPDATED)
    ========================================================= */
 function renderHome() {
     cardIcon.className = "fa-solid fa-train";
     titleEl.innerText = "Welcome Aboard";
-    subEl.innerText = "Discover amazing engineering feats, read the latest news, or test your knowledge.";
+    
+    // Subtitle can be simpler now
+    subEl.innerText = "The #1 place for railway enthusiasts.";
+
     dynamicArea.innerHTML = `
+        <!-- The New Update Banner -->
+        <div class="update-banner">
+            <i class="fa-solid fa-star"></i> NEW : Signalling Minigame v1.1
+        </div>
+
         <div class="btn-group">
-            <button class="action-btn" onclick="initFacts()"><i class="fa-solid fa-book-open"></i> Discover Facts</button>
-            <button class="action-btn secondary" onclick="initQuiz()"><i class="fa-solid fa-brain"></i> Try the Quiz</button>
+            <button class="action-btn" onclick="openDailyFact()">
+                <i class="fa-solid fa-calendar-day"></i> Fact of the Day
+            </button>
+            <button class="action-btn secondary" onclick="openDailyArticle()">
+                <i class="fa-solid fa-newspaper"></i> Article of the Day
+            </button>
+        </div>
+        
+        <div style="margin-top: 20px; font-size: 0.9rem; color: #94a3b8;">
+            Select a category from the menu to start exploring.
         </div>
     `;
+}
+
+// Helper: Open Facts Section
+function openDailyFact() {
+    setActiveMenu('btn-fact');
+    initFacts();
+}
+
+// Helper: Open Latest News Article (Index 0)
+function openDailyArticle() {
+    setActiveMenu('btn-news');
+    if (newsData.length > 0) {
+        viewArticle(0); // Opens the first article in the list
+    } else {
+        initNews(); // Fallback if no news
+    }
+}
+
+function setActiveMenu(id) {
+    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+    const btn = document.getElementById(id);
+    if(btn) btn.classList.add('active');
 }
 
 /* =========================================================
@@ -211,7 +249,7 @@ function showQuizResults() {
 }
 
 /* =========================================================
-   7. NEWS LOGIC (WITH FULL ARTICLE VIEW)
+   7. NEWS LOGIC
    ========================================================= */
 function initNews() {
     cardIcon.className = "fa-solid fa-newspaper";
